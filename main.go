@@ -110,7 +110,6 @@ func parseSeccompPolicy() (*seccomp.Policy, error) {
 					Action: seccomp.ActionErrno,
 					Names:  []string{
 						"capset",
-						"prctl",
 						"ptrace",
 						"seccomp",
 						"setgid",
