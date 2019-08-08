@@ -1,0 +1,151 @@
+# Hint: to find what calls are needed, run the program outside the sandbox with the following:
+#   ```strace -c -S calls -- <program and arguments>```
+# then build a whitelist instead of blacklisting and set the default to `errno`
+
+seccomp:
+  # The default action is applied if none of the syscalls match.
+  #
+  # Possible actions:
+  # - kill_process (since Linux 4.14)
+  # - kill_thread
+  # - trap
+  # - errno (returns EPERM)
+  # - trace
+  # - log (since Linux 4.14)
+  # - allow
+  default_action: allow
+
+  syscalls:
+    ### Kill the process if these are called.
+    - action: kill_process
+      names:
+        - capset
+        - chown
+        - fchown
+        - lchown
+        - prctl
+        - ptrace
+        - seccomp
+        - setfsgid
+        - setfsuid
+        - setgid
+        - setgroups
+        - setuid
+
+    ### Deny the following
+    - action: errno
+      names:
+
+        ### Required to launch child processes -- unfortunately, can't be disabled.
+        #- execve
+        #- arch_prctl
+
+        ###
+        # Network:
+        #   `bind` will block incoming,
+        #   `connect` blocks outgoing.
+        #   `socket` will block DNS, may want this if blocking connect, but is needed to accept incoming.
+        #    Uncomment all to prevent any networking.
+        ###
+        #- accept
+        #- bind
+        #- connect
+        #- socket
+        #- listen
+        #- recvfrom
+        #- recvmsg
+        #- sendmsg
+        #- sendto
+
+        ### Almost always needed
+        - unlink
+        - unlinkat
+
+        ### Likely to be needed
+        - chdir
+        - clone
+        - execveat
+        - fork
+        - kill
+        - symlink
+        - symlinkat
+        - vfork
+
+        ### Less likely to be needed
+        - _sysctl
+        - acct
+        - add_key
+        - adjtimex
+        - bpf
+        - clock_adjtime
+        - clock_settime
+        - create_module
+        - delete_module
+        - fchmodat
+        - fchownat
+        - finit_module
+        - fremovexattr
+        - fsetxattr
+        - futimesat
+        - get_kernel_syms
+        - get_mempolicy
+        - init_module
+        - ioperm
+        - iopl
+        - kcmp
+        - kexec_file_load
+        - kexec_load
+        - keyctl
+        - link
+        - linkat
+        - lookup_dcookie
+        - lremovexattr
+        - mbind
+        - mknod
+        - mknodat
+        - mlockall
+        - mount
+        - move_pages
+        - name_to_handle_at
+        - nfsservctl
+        - open_by_handle_at
+        - perf_event_open
+        - personality
+        - pivot_root
+        - process_vm_readv
+        - process_vm_writev
+        - ptrace
+        - query_module
+        - quotactl
+        - reboot
+        - removexattr
+        - request_key
+        - sched_setattr
+        - set_mempolicy
+        - setdomainname
+        - sethostname
+        - setns
+        - setpriority
+        - setrlimit
+        - settimeofday
+        - setxattr
+        - swapoff
+        - swapon
+        - sysfs
+        - tuxcall
+        - umount2
+        - unshare
+        - uselib
+        - userfaultfd
+        - ustat
+
+        ### Only exist in later kernels:
+        #- clone3
+        #- fsconfig
+        #- fsmount
+        #- fsopen
+        #- fspick
+        #- move_mount
+        #- open_tree
+        #- pidfd_open
+        #- pidfd_send_signal
