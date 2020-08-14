@@ -1,4 +1,4 @@
-// Copyright [2019] [Todd Garrison]
+// Copyright [2020] [Todd Garrison]
 //
 // Based upon work by Elasticsearch B.V. See NOTICE.txt
 //
