@@ -1,4 +1,4 @@
-module github.com/frameloss/restrict
+module github.com/blockpane/restrict
 
 go 1.14
 
